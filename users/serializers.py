@@ -15,8 +15,8 @@ class UserSerializer(serializers.ModelSerializer):
         Metadata options for the UserSerializer class.
         """
         model = User
-        fields = ['id', 'first_name', 'last_name', 'email', 'password', 'bio',
-                  'last_activity', 'date_joined']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password',
+                  'bio', 'last_activity', 'date_joined']
 
         extra_kwargs = {
             'id': {'read_only': True},
