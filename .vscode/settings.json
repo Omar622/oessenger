@@ -1,0 +1,11 @@
+{
+    "cSpell.words": [
+        "oessenger",
+        "redoc",
+        "viewset",
+        "viewsets",
+        "yasg"
+    ],
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.autoImportCompletions": true
+}
