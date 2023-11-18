@@ -1,4 +1,3 @@
-from functools import partial
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.views import APIView
@@ -20,7 +19,7 @@ class UserView(APIView):
     def get_object(self):
         """get user from token instead of query path"""
         try:
-            user = User.objects.get(id=self.request.user.id)
+            user = User.objects.get(id=self.request.user.id)  # type: ignore
             self.check_object_permissions(self.request, user)
             return user
         except User.DoesNotExist:
@@ -32,10 +31,12 @@ class UserView(APIView):
         """
         if self.request.method in ["POST"]:
             return []
-        else:
-            return [permission() for permission in self.permission_classes]
+        return [permission() for permission in self.permission_classes]
 
-    @swagger_auto_schema(request_body=UserSerializer)
+    @swagger_auto_schema(
+        request_body=UserSerializer,
+        responses={201: UserSerializer},
+        security=[],)
     def post(self, request, format=None):
         """
         Create a new user.
@@ -86,5 +87,5 @@ class UserView(APIView):
         Delete a user object.
         """
         user = self.get_object()
-        user.delete()
+        user.delete()  # type: ignore
         return Response(status=status.HTTP_204_NO_CONTENT)
