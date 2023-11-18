@@ -16,7 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
         """
         model = User
         fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password',
-                  'bio', 'last_activity', 'date_joined']
+                  'picture_path', 'bio', 'last_activity', 'date_joined']
 
         extra_kwargs = {
             'id': {'read_only': True},
@@ -39,9 +39,13 @@ class UserSerializer(serializers.ModelSerializer):
         """
         Updates an existing user instance.
         """
+        instance.username = validated_data.get('username', instance.username)
+        instance.email = validated_data.get('email', instance.email)
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
         instance.bio = validated_data.get('bio', instance.bio)
+        instance.picture_path = validated_data.get(
+            'picture_path', instance.picture_path)
         password = validated_data.get('password')
 
         if password is not None:
