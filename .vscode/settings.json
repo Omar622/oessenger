@@ -1,0 +1,13 @@
+{
+    "cSpell.words": [
+        "oessenger",
+        "pytz",
+        "redoc",
+        "simplejwt",
+        "viewset",
+        "viewsets",
+        "yasg"
+    ],
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.autoImportCompletions": true
+}
