@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  api:
+    container_name: oessenger-api-dev
+    restart: always
+    build:
+      context: .
+      dockerfile: ./Dockerfile.dev
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    depends_on:
+      - db
+    ports:
+      - ${PORT}:8000
+    volumes:
+      - .:/home/appuser/app # mount volume
+      - /home/appuser/app/.venv # anonymous volume
+
+  db:
+    container_name: oessenger-db-dev
+    restart: always
+    image: postgres:alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pg_data:/var/lib/postgresql/data # named volume
+
+volumes:
+  pg_data:
