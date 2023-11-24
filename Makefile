@@ -1,5 +1,10 @@
+# api & db services name inside docker-compose
 API_SERVICE_NAME := api
 DB_SERVICE_NAME := db
+
+# python path inside docker container
+PYTHON_PATH := ./.venv/bin/python
+
 
 # docker compose
 
@@ -23,7 +28,7 @@ destroy:
 # interactive shell
 
 django_shell: up
-	docker-compose exec ${API_SERVICE_NAME} python manage.py shell
+	docker-compose exec ${API_SERVICE_NAME} ${PYTHON_PATH} manage.py shell
 
 api_shell: up
 	docker-compose exec ${API_SERVICE_NAME} sh
@@ -42,22 +47,25 @@ db_logs: up
 # django
 
 startapp:
-	docker-compose run --rm ${API_SERVICE_NAME} python manage.py startapp $(filter-out $@,$(MAKECMDGOALS))
+	docker-compose run --rm -u root ${API_SERVICE_NAME} ${PYTHON_PATH} manage.py startapp $(filter-out $@,$(MAKECMDGOALS))
 
 makemigrations:
-	docker-compose run --rm ${API_SERVICE_NAME} python manage.py makemigrations $(filter-out $@,$(MAKECMDGOALS))
+	docker-compose run --rm -u root ${API_SERVICE_NAME} ${PYTHON_PATH} manage.py makemigrations $(filter-out $@,$(MAKECMDGOALS))
 
 migrate:
-	docker-compose run --rm ${API_SERVICE_NAME} python manage.py migrate $(filter-out $@,$(MAKECMDGOALS))
+	docker-compose run --rm ${API_SERVICE_NAME} ${PYTHON_PATH} manage.py migrate $(filter-out $@,$(MAKECMDGOALS))
+
+showmigrations:
+	docker-compose run --rm ${API_SERVICE_NAME} ${PYTHON_PATH} manage.py showmigrations $(filter-out $@,$(MAKECMDGOALS))
 
 createsuperuser:
-	docker-compose run --rm ${API_SERVICE_NAME} python manage.py createsuperuser $(filter-out $@,$(MAKECMDGOALS))
+	docker-compose run --rm ${API_SERVICE_NAME} ${PYTHON_PATH} manage.py createsuperuser $(filter-out $@,$(MAKECMDGOALS))
 
 test:
-	docker-compose run --rm ${API_SERVICE_NAME} python manage.py test
+	docker-compose run --rm ${API_SERVICE_NAME} ${PYTHON_PATH} manage.py test
 
 manage:
-	docker-compose run --rm ${API_SERVICE_NAME} python manage.py $(filter-out $@,$(MAKECMDGOALS))
+	docker-compose run --rm -u root ${API_SERVICE_NAME} ${PYTHON_PATH} manage.py $(filter-out $@,$(MAKECMDGOALS))
 
 # lint
 
