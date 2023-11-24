@@ -49,7 +49,10 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'drf_yasg',
-    'users'
+    'users',
+    'rooms',
+    'members',
+    'room_messages',
 ]
 
 AUTH_USER_MODEL = 'users.User'
