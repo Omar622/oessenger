@@ -376,7 +376,7 @@ class UserPutViewTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class UsePatchViewTests(TestCase):
+class UserPatchViewTests(TestCase):
     """
     A test case class for testing the successful updating of user data.
     """
@@ -500,5 +500,68 @@ class UsePatchViewTests(TestCase):
             data=updated_fake_user,
             content_type="application/json",
         )
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class TokenObtainPairViewTests(TestCase):
+    """
+    A test case class for testing the successful logging in of user.
+    """
+
+    def setUp(self):
+        """
+        Deletes all existing user objects before each test method is run.
+        """
+        User.objects.all().delete()
+
+    def test_success(self):
+        """
+        Test method for successful user logging in.
+        """
+        fake_user = UserFactory.build()
+        user_instance = User(username=fake_user.username,
+                             email=fake_user.email,)
+        user_instance.set_password(fake_user.password)
+        user_instance.save()
+
+        response = client.post(reverse("token_obtain_pair"), data={
+            "username": fake_user.username,
+            "password": fake_user.password,
+        })
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # check response body
+        response_data = json.loads(response.content.decode('utf-8'))
+        self.assertIsInstance(response_data["access"], str)
+        self.assertIsInstance(response_data["refresh"], str)
+
+    def test_failure_wrong_password(self):
+        """
+        Test method for failure user logging in - wrong password.
+        """
+        fake_user = UserFactory.build()
+        user_instance = User(username=fake_user.username,
+                             email=fake_user.email,)
+        user_instance.set_password(fake_user.password)
+        user_instance.save()
+
+        response = client.post(reverse("token_obtain_pair"), data={
+            "username": fake_user.username,
+            "password": fake_user.password + 'bad password',
+        })
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_failure_not_exist_user(self):
+        """
+        Test method for failure user logging in - user is not exist.
+        """
+
+        response = client.post(reverse("token_obtain_pair"), data={
+            "username": 'not exist username',
+            "password": 'not exist password',
+        })
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
