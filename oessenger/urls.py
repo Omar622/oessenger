@@ -27,4 +27,5 @@ urlpatterns = [
          name='schema-redoc'),
 
     path('api/', include('users.urls')),
+    path('api/', include('rooms.urls')),
 ]

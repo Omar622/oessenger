@@ -6,7 +6,7 @@ from .models import User
 
 class UserFactory(DjangoModelFactory):
     """
-    A configuration class for the UserFactory factory class.
+    A Factory class for user model.
     """
     class Meta:
         """
